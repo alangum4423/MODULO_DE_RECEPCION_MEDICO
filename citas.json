@@ -1,0 +1,16 @@
+[
+    {
+        "paciente": "Kevin Owen Vallejos Lopez",
+        "ci": "12850930",
+        "especialidad": "Neurología",
+        "doctor": "Dr. Hannibal Lecter - 18:00",
+        "triaje": "PA: 12 | TEMP: 47 | PESO: 78"
+    },
+    {
+        "paciente": "Alan Gutierrez Maidana",
+        "ci": "12668086",
+        "especialidad": "Traumatología",
+        "doctor": "Dr. Emmett Brown - 16:00",
+        "triaje": "PA: 23 | TEMP: 45 | PESO: 66"
+    }
+]

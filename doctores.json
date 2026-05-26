@@ -1,0 +1,47 @@
+{
+    "Medicina General": [
+        {"nombre": "Dr. Mario", "hora": "08:00"},
+        {"nombre": "Dra. Peach", "hora": "09:30"},
+        {"nombre": "Dr. Gregory House", "hora": "10:15"},
+        {"nombre": "Dr. Drake Ramoray", "hora": "11:00"}
+    ],
+    "Traumatología": [
+        {"nombre": "Dr. Stephen Strange", "hora": "08:00"},
+        {"nombre": "Dr. Jackson Avery", "hora": "10:30"},
+        {"nombre": "Dr. Emmett Brown", "hora": "16:00"}
+    ],
+    "Neurología": [
+        {"nombre": "Dr. Derek Shepherd", "hora": "09:00"},
+        {"nombre": "Dr. Charles Xavier", "hora": "15:00"},
+        {"nombre": "Dr. Hannibal Lecter", "hora": "18:00"}
+    ],
+    "Laboratorio": [
+        {"nombre": "Dr. Barry Allen", "hora": "08:30"},
+        {"nombre": "Dr. Victor Fries", "hora": "11:00"},
+        {"nombre": "Dr. Bruce Banner", "hora": "14:00"}
+    ],
+    "Urología": [
+        {"nombre": "Dr. Tobias Fünke", "hora": "14:00"},
+        {"nombre": "Dr. Percival Cox", "hora": "16:30"}
+    ],
+    "Oncología": [
+        {"nombre": "Dr. James Wilson", "hora": "10:00"},
+        {"nombre": "Dra. Allison Cameron", "hora": "13:00"}
+    ],
+    "Ginecología": [
+        {"nombre": "Dr. Addison Montgomery", "hora": "11:15"},
+        {"nombre": "Dr. Mindy Lahiri", "hora": "17:00"}
+    ],
+    "Cardiología": [
+        {"nombre": "Dr. Preston Burke", "hora": "07:30"},
+        {"nombre": "Dr. Cristina Yang", "hora": "12:00"}
+    ],
+    "Pediatría": [
+        {"nombre": "Dr. Arizona Robbins", "hora": "09:45"},
+        {"nombre": "Dr. Doug Ross", "hora": "15:30"}
+    ],
+    "Inmunología": [
+        {"nombre": "Dra. Lisa Cuddy", "hora": "14:45"},
+        {"nombre": "Dr. John Zoidberg", "hora": "15:45"}
+    ]
+}
