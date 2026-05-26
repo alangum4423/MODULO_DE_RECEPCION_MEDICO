@@ -50,8 +50,6 @@ else:
     citas = []
 
 
-
-
 #AQUI INICIAMOS LO SERIO
 
 class AppHospitalCompleto:
