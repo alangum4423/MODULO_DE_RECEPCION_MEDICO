@@ -58,20 +58,16 @@ class AppHospitalCompleto:
 
         self.root = root
 
-        self.root.title(
-            "SISTEMA MÉDICO INTEGRAL | Hospital 32 de Febrero"
-        )
-
-        self.root.geometry("1100x800")
+        self.root.title("SISTEMA MÉDICO | Hospital Obrero")
+        self.root.geometry("1100x800+0+0")
         self.root.resizable(True, True)
         self.root.iconbitmap("hosp.ico")
-        self.color_sidebar = "#0B263B"
-        self.color_bg = "#F3F7FB"
+        self.color_bg = "#d5e3ec"
         self.color_accent = "#0E56A8"
-        self.color_enfermeria = "#16A085"
-        self.color_pacientes = "#8E44AD"
-        self.color_texto_tit = "#2C3E50"
-        self.color_texto_sub = "#5D6D7E"
+        self.color_enfermeria = "#3f4fda"
+        self.color_pacientes = "#3f4fda"
+        self.color_texto_tit = "#3f4fda"
+        self.color_texto_sub = "#3f4fda"
 
         self.fuente_tit = font.Font(
             family="Segoe UI",
@@ -126,11 +122,7 @@ class AppHospitalCompleto:
 
     def sidebar(self, subtitulo):
 
-        side = tk.Frame(
-            self.root,
-            bg=self.color_sidebar,
-            width=240
-        )
+        side = tk.Frame(self.root, bg="#0067c0", width=240)
 
         side.grid(row=0, column=0, sticky="ns")
 
@@ -140,7 +132,7 @@ class AppHospitalCompleto:
             side,
             text="🏥",
             font=("Segoe UI", 45),
-            bg=self.color_sidebar,
+            bg="#0067c0",
             fg="white"
         ).pack(pady=(40, 0))
 
@@ -148,15 +140,15 @@ class AppHospitalCompleto:
             side,
             text="HOSPITAL",
             font=("Segoe UI", 14, "bold"),
-            bg=self.color_sidebar,
+            bg="#0067c0",
             fg="white"
         ).pack()
 
         tk.Label(
             side,
-            text="32 DE FEBRERO",
+            text="OBRERO",
             font=("Segoe UI", 14, "bold"),
-            bg=self.color_sidebar,
+            bg="#0067c0",
             fg="#5B9DDF"
         ).pack()
 
@@ -164,7 +156,7 @@ class AppHospitalCompleto:
             side,
             text=subtitulo.upper(),
             font=("Segoe UI", 9, "bold"),
-            bg=self.color_sidebar,
+            bg="#0067c0",
             fg="white"
         ).pack(pady=30)
 
@@ -192,8 +184,7 @@ class AppHospitalCompleto:
     def mostrar_panel_recepcion(self):
 
         self.limpiar()
-
-        self.sidebar("Recepción General")
+        self.sidebar("Sala de Recepción")
 
         main = tk.Frame(
             self.root,
@@ -209,19 +200,24 @@ class AppHospitalCompleto:
             text="Buenos Días",
             font=self.fuente_tit,
             bg=self.color_bg,
-            fg=self.color_texto_tit
+            fg="Black"
         ).pack(anchor="w")
 
         tk.Label(
             main,
-            text="Bienvenido a la sala de Recepcion del Hospital '32 de Febrero.\n"
-                 "Somos un Hospital Pobre pero Honrado.\n"
-                 "Nuestra mision es ofrecer un servicio de salud eficiente, eficaz y honesto.\n"
-                 "A continuacion seleccione la opcion que desee: ",
+            text="Bienvenido al Hospital Obrero.\n"
+                 "Agradecemos su confianza en nuestra institución, nuestro personal trabaja "
+                 "día a día para ofrecer servicios de salud con profesionalismo, respeto y "
+                 "calidad humana.\n"
+                 "Mediante este sistema podrá realizar diferentes trámites y consultas "
+                 "relacionados con la atención médica y administrativa.\n"
+                 "Por favor, seleccione una opción del menú para continuar:",
             font=self.fuente_bienvenida,
             bg=self.color_bg,
-            fg=self.color_texto_sub
-        ).pack(anchor="w", pady=(5, 30))
+            fg="Black",
+            justify="left",
+            anchor="w",
+        ).pack(anchor="w", fill="both", expand=True, padx=10, pady=10)
 
         grid = tk.Frame(main, bg=self.color_bg)
 
@@ -229,49 +225,10 @@ class AppHospitalCompleto:
 
         grid.columnconfigure((0, 1), weight=1)
 
-        self.card(
-            grid,
-            "REGISTRO PACIENTES",
-            "👤",
-            "Alta de pacientes",
-            0,
-            0,
-            self.vista_registro,
-            self.color_pacientes
-        )
-
-        self.card(
-            grid,
-            "RESERVAR CITA",
-            "📅",
-            "Agenda médica",
-            0,
-            1,
-            self.vista_citas,
-            self.color_accent
-        )
-
-        self.card(
-            grid,
-            "ENFERMERÍA",
-            "🩺",
-            "Triaje y signos vitales",
-            1,
-            0,
-            self.vista_enfermeria,
-            self.color_enfermeria
-        )
-
-        self.card(
-            grid,
-            "VER AGENDA",
-            "📋",
-            "Listado completo",
-            1,
-            1,
-            self.vista_agenda,
-            "#34495E"
-        )
+        self.card(grid, "REGISTRO PACIENTES", "👤", "Alta de pacientes", 0, 0, self.vista_registro, self.color_pacientes)
+        self.card(grid, "RESERVAR CITA", "📅", "Agenda médica", 0, 1, self.vista_citas, self.color_enfermeria)
+        self.card(grid, "ENFERMERÍA", "🩺", "Triaje y signos vitales", 1, 0, self.vista_enfermeria, self.color_enfermeria)
+        self.card(grid, "VER AGENDA", "📋", "Listado completo", 1, 1, self.vista_enfermeria, self.color_enfermeria)
 
 #CUADROS
 
@@ -279,7 +236,7 @@ class AppHospitalCompleto:
 
         f = tk.Frame(
             p,
-            bg="white",
+            bg="#eef2fb",
             highlightthickness=1,
             highlightbackground="#D8E2EC",
             cursor="hand2"
@@ -297,7 +254,7 @@ class AppHospitalCompleto:
             f,
             text=e,
             font=("Segoe UI", 35),
-            bg="white"
+            bg="#eef2fb"
         ).pack(pady=15)
 
         tk.Label(
@@ -305,7 +262,7 @@ class AppHospitalCompleto:
             text=t,
             font=("Segoe UI", 11, "bold"),
             fg=col,
-            bg="white"
+            bg="#eef2fb"
         ).pack()
 
         tk.Label(
@@ -313,7 +270,7 @@ class AppHospitalCompleto:
             text=d,
             font=("Segoe UI", 9),
             fg="#8193A5",
-            bg="white"
+            bg="#eef2fb"
         ).pack(pady=10)
 
         tk.Button(
