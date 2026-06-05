@@ -69,19 +69,9 @@ class AppHospitalCompleto:
         self.color_texto_tit = "#3f4fda"
         self.color_texto_sub = "#3f4fda"
 
-        self.fuente_tit = font.Font(
-            family="Segoe UI",
-            size=26,
-            weight="bold"
-        )
-
-        self.fuente_bienvenida = font.Font(
-            family="Segoe UI",
-            size=14
-        )
-
+        self.fuente_tit = font.Font(family="Segoe UI", size=26, weight="bold")
+        self.fuente_bienvenida = font.Font(family="Segoe UI", size=14)
         self.root.grid_columnconfigure(1, weight=1)
-
         self.root.grid_rowconfigure(0, weight=1)
 
         self.mostrar_panel_recepcion()
