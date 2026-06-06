@@ -3,10 +3,6 @@ from tkinter import ttk, messagebox, font
 import json
 import os
 
-#EJECUTABLE.EXE
-
-
-
 #GUARDADO DE PACIENTES
 
 ARCHIVO_DOCTORES = "doctores.json"
@@ -52,70 +48,46 @@ else:
 
 #AQUI INICIAMOS LO SERIO
 
-class AppHospitalCompleto:
+class SaladeRecepcion:
 
-    def __init__(self, root):
+    def __init__(self, window):
 
-        self.root = root
-
-        self.root.title("SISTEMA MÉDICO | Hospital Obrero")
-        self.root.geometry("1100x800+0+0")
-        self.root.resizable(True, True)
-        self.root.iconbitmap("hosp.ico")
+        self.window = window
+        self.window.title("SISTEMA MÉDICO | Hospital Obrero")
+        self.window.geometry("1100x800+0+0")
+        self.window.configure(bg="#0067c0")
+        self.window.resizable(True, True)
+        self.window.iconbitmap("hosp.ico")
         self.color_bg = "#d5e3ec"
-        self.color_accent = "#0E56A8"
+        self.color_accent = "#0E7AA8"
         self.color_enfermeria = "#3f4fda"
         self.color_pacientes = "#3f4fda"
-        self.color_texto_tit = "#3f4fda"
-        self.color_texto_sub = "#3f4fda"
-
-        self.fuente_tit = font.Font(family="Segoe UI", size=26, weight="bold")
-        self.fuente_bienvenida = font.Font(family="Segoe UI", size=14)
-        self.root.grid_columnconfigure(1, weight=1)
-        self.root.grid_rowconfigure(0, weight=1) 
-
+        self.window.grid_columnconfigure(1, weight=1)
+        self.window.grid_rowconfigure(0, weight=1)
         self.mostrar_panel_recepcion()
 
 #GUARDADO EN JSON
 
     def guardar_pacientes(self):
-
         with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
-
-            json.dump(
-                pacientes_db,
-                archivo,
-                indent=4,
-                ensure_ascii=False
-            )
+            json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
 
     def guardar_citas(self):
-
         with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
-
-            json.dump(
-                citas,
-                archivo,
-                indent=4,
-                ensure_ascii=False
-            )
+            json.dump(citas, archivo, indent=4, ensure_ascii=False)
 
 #LIMPIEZA
 
     def limpiar(self):
-
-        for widget in self.root.winfo_children():
-
+        for widget in self.window.winfo_children():
             widget.destroy()
 
 #BARRA LATERAL (AUN EN PROCESO)
 
     def sidebar(self, subtitulo):
 
-        side = tk.Frame(self.root, bg="#0067c0", width=240)
-
-        side.grid(row=0, column=0, sticky="ns")
-
+        side = tk.Frame(self.window, bg="#0067c0", width=240)
+        side.grid(row=0, column=0, sticky="ns", padx=5, pady=5)
         side.grid_propagate(False)
 
         tk.Label(
@@ -124,77 +96,77 @@ class AppHospitalCompleto:
             font=("Segoe UI", 45),
             bg="#0067c0",
             fg="white"
-        ).pack(pady=(40, 0))
-
-        tk.Label(
-            side,
-            text="HOSPITAL",
-            font=("Segoe UI", 14, "bold"),
-            bg="#0067c0",
-            fg="white"
-        ).pack()
-
-        tk.Label(
-            side,
-            text="OBRERO",
-            font=("Segoe UI", 14, "bold"),
-            bg="#0067c0",
-            fg="#5B9DDF"
-        ).pack()
-
-        tk.Label(
-            side,
-            text=subtitulo.upper(),
-            font=("Segoe UI", 9, "bold"),
-            bg="#0067c0",
-            fg="white"
-        ).pack(pady=30)
+        ).pack(pady=(40, 0))  
+        tk.Label(side, text="HOSPITAL\n" "OBRERO", font=("Segoe UI", 10, "bold"), bg= "#0067c0", fg="white").pack()
 
         tk.Button(
             side,
-            text="🏠 INICIO",
-            bg="#1D3E5C",
+            text="🏠",
+            bg="#2474B5",
             fg="white",
             bd=0,
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
-        ).pack(fill="x", pady=2)
+        ).pack(fill="x", pady=(40,0))  
+        tk.Label(side, text="INICIO1", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
-            text="🚪 SALIR",
+            text="🏠",
+            bg="#2474B5",
+            fg="white",
+            bd=0,
+            font=("Segoe UI", 15, "bold"),
+            command=self.mostrar_panel_recepcion
+        ).pack(fill="x", pady=(40,0))  
+        tk.Label(side, text="INICIO2", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+
+        tk.Button(
+            side,
+            text="🏠",
+            bg="#2474B5",
+            fg="white",
+            bd=0,
+            font=("Segoe UI", 15, "bold"),
+            command=self.mostrar_panel_recepcion
+        ).pack(fill="x", pady=(40,0))  
+        tk.Label(side, text="INICIO3", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+
+        tk.Button(
+            side,
+            text="🏠",
+            bg="#2474B5",
+            fg="white",
+            bd=0,
+            font=("Segoe UI", 15, "bold"),
+            command=self.mostrar_panel_recepcion
+        ).pack(fill="x", pady=(40,0))  
+        tk.Label(side, text="INICIO4", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+
+        tk.Button(
+            side,
+            text="🚪",
             bg="#C0392B",
             fg="white",
             bd=0,
-            command=self.root.quit
-        ).pack(side="bottom", fill="x", ipady=15)
+            command=self.window.quit
+        ).pack(side="bottom", fill="x", ipady=15)  
 
-#INTERFAZ PRINCIPAL
+#EL INFIERNO DE LA INTERFAZ PRINCIPAL 9AUNQUE SI SE VE MODERNA)
 
     def mostrar_panel_recepcion(self):
 
         self.limpiar()
         self.sidebar("Sala de Recepción")
 
-        main = tk.Frame(
-            self.root,
-            bg=self.color_bg,
-            padx=50,
-            pady=40
-        )
+        main = tk.Frame(self.window, bg=self.color_bg, padx=40, pady=40)
+        main.grid(row=0, column=1, sticky="nsew", pady=5)
+        
+        self.fuente_tit = font.Font(family="Segoe UI", size=26, weight="bold")
+        tk.Label(main, text="Buenos Días", font=self.fuente_tit, bg=self.color_bg, fg="Black").pack()
 
-        main.grid(row=0, column=1, sticky="nsew")
-
-        tk.Label(
-            main,
-            text="Buenos Días",
-            font=self.fuente_tit,
-            bg=self.color_bg,
-            fg="Black"
-        ).pack(anchor="w")
-
-        tk.Label(
-            main,
+        self.fuente_bienvenida = font.Font(family="Segoe UI", size=14)
+        tk.Label(main,
             text="Bienvenido al Hospital Obrero.\n"
                  "Agradecemos su confianza en nuestra institución, nuestro personal trabaja "
                  "día a día para ofrecer servicios de salud con profesionalismo, respeto y "
@@ -202,17 +174,10 @@ class AppHospitalCompleto:
                  "Mediante este sistema podrá realizar diferentes trámites y consultas "
                  "relacionados con la atención médica y administrativa.\n"
                  "Por favor, seleccione una opción del menú para continuar:",
-            font=self.fuente_bienvenida,
-            bg=self.color_bg,
-            fg="Black",
-            justify="left",
-            anchor="w",
-        ).pack(anchor="w", fill="both", expand=True, padx=10, pady=10)
-
+            font=self.fuente_bienvenida, bg=self.color_bg, fg="Black", wraplength=1000).pack()
+        
         grid = tk.Frame(main, bg=self.color_bg)
-
         grid.pack(fill="both", expand=True)
-
         grid.columnconfigure((0, 1), weight=1)
 
         self.card(grid, "REGISTRO PACIENTES", "👤", "Alta de pacientes", 0, 0, self.vista_registro, self.color_pacientes)
@@ -661,9 +626,6 @@ class AppHospitalCompleto:
 
         tabla.pack(fill="both", expand=True)
 
-
 root = tk.Tk()
-
-app = AppHospitalCompleto(root)
-
+app = SaladeRecepcion(root)
 root.mainloop()
