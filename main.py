@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, font
+from PIL import Image, ImageTk
 import json
 import os
 
@@ -62,8 +63,12 @@ class SaladeRecepcion:
         self.color_accent = "#0E7AA8"
         self.color_enfermeria = "#3f4fda"
         self.color_pacientes = "#3f4fda"
+
+
+
         self.window.grid_columnconfigure(1, weight=1)
         self.window.grid_rowconfigure(0, weight=1)
+
         self.mostrar_panel_recepcion()
 
 #GUARDADO EN JSON
@@ -108,7 +113,7 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="INICIO1", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="             INICIO1             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -119,7 +124,7 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="INICIO2", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="             INICIO2             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -130,7 +135,7 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="INICIO3", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="             INICIO3             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -141,7 +146,7 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="INICIO4", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="             INICIO4             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -167,75 +172,65 @@ class SaladeRecepcion:
 
         self.fuente_bienvenida = font.Font(family="Segoe UI", size=14)
         tk.Label(main,
-            text="Bienvenido al Hospital Obrero.\n"
-                 "Agradecemos su confianza en nuestra institución, nuestro personal trabaja "
-                 "día a día para ofrecer servicios de salud con profesionalismo, respeto y "
-                 "calidad humana.\n"
-                 "Mediante este sistema podrá realizar diferentes trámites y consultas "
-                 "relacionados con la atención médica y administrativa.\n"
-                 "Por favor, seleccione una opción del menú para continuar:",
+            text="Bienvenido al Hospital Obrero.\n",
             font=self.fuente_bienvenida, bg=self.color_bg, fg="Black", wraplength=1000).pack()
         
         grid = tk.Frame(main, bg=self.color_bg)
         grid.pack(fill="both", expand=True)
-        grid.columnconfigure((0, 1), weight=1)
-
-        self.card(grid, "REGISTRO PACIENTES", "👤", "Alta de pacientes", 0, 0, self.vista_registro, self.color_pacientes)
-        self.card(grid, "RESERVAR CITA", "📅", "Agenda médica", 0, 1, self.vista_citas, self.color_enfermeria)
-        self.card(grid, "ENFERMERÍA", "🩺", "Triaje y signos vitales", 1, 0, self.vista_enfermeria, self.color_enfermeria)
-        self.card(grid, "VER AGENDA", "📋", "Listado completo", 1, 1, self.vista_enfermeria, self.color_enfermeria)
+        grid.columnconfigure((0, 1, 2), weight=1)
+        grid.rowconfigure((0, 1), weight=1) 
+        self.card(grid, "RESERVAR CITA", "citas.jpg", "Agenda médica y turnos", 0, 1, self.vista_citas, self.color_enfermeria, 2, 1)
+        self.card(grid, "REGISTRO\n" "PACIENTES", "registro.jpg", "Registro de\n" "nuevos pacientes\n" "en sistema", 0, 0, self.vista_registro, self.color_pacientes, 1, 2)
+        self.card(grid, "ENFERMERÍA", "enfermeria.jpg", "Triaje y signos vitales", 1, 1, self.vista_enfermeria, self.color_enfermeria, 1, 1)
+        self.card(grid, "VER AGENDA", "agenda.jpg", "Listado completo", 1, 2, self.vista_enfermeria, self.color_enfermeria, 1, 1)
 
 #CUADROS
+    def card(self, p, t, img_ruta, d, r, c, cmd, col, colspan=1, rowspan=1):
 
-    def card(self, p, t, e, d, r, c, cmd, col):
+        ancho = 760 if colspan == 2 else 360
+        alto = 460 if rowspan == 2 else 210
 
-        f = tk.Frame(
-            p,
-            bg="#eef2fb",
-            highlightthickness=1,
-            highlightbackground="#D8E2EC",
-            cursor="hand2"
-        )
+        try:
+            img_or = Image.open(img_ruta).resize((ancho, alto), Image.Resampling.LANCZOS)
+            foto = ImageTk.PhotoImage(img_or)
+        except Exception as e:
+            print(f"Error cargando {img_ruta}: {e}")
+            foto = None
 
-        f.grid(
-            row=r,
-            column=c,
-            padx=10,
-            pady=10,
-            sticky="nsew"
-        )
+        f = tk.Label(p, bg=col, bd=0)
+        f.grid(row=r, column=c, columnspan=colspan, rowspan=rowspan, padx=10, pady=10, sticky="nsew")
 
-        tk.Label(
-            f,
-            text=e,
-            font=("Segoe UI", 35),
-            bg="#eef2fb"
-        ).pack(pady=15)
+        try:
+            img_original = Image.open(img_ruta)
+        except Exception as e:
+            print(f"Error al abrir la imagen {img_ruta}: {e}")
+            img_original = None
 
-        tk.Label(
-            f,
-            text=t,
-            font=("Segoe UI", 11, "bold"),
-            fg=col,
-            bg="#eef2fb"
-        ).pack()
+        def ajustar_imagen_al_contenedor(event):
+            if img_original:
+                ancho_real = event.width
+                alto_real = event.height
+                img_redimensionada = img_original.resize((ancho_real, alto_real), Image.Resampling.LANCZOS)
+                foto_tk = ImageTk.PhotoImage(img_redimensionada)
+                f.config(image=foto_tk)
+                f.image = foto_tk
 
-        tk.Label(
-            f,
-            text=d,
-            font=("Segoe UI", 9),
-            fg="#8193A5",
-            bg="#eef2fb"
-        ).pack(pady=10)
+        f.bind("<Configure>", ajustar_imagen_al_contenedor)
 
-        tk.Button(
-            f,
-            text="ABRIR",
-            bg=col,
-            fg="white",
-            bd=0,
-            command=cmd
-        ).pack(fill="x", padx=20, pady=20, ipady=10)
+        if rowspan == 2:
+            lbl_tit = tk.Label(f, text=t, font=("Segoe UI", 16, "bold"), fg="white", bg="#2A2A2A", justify="left")
+            lbl_tit.place(relx=0.05, rely=0.3, anchor="w")
+            lbl_desc = tk.Label(f, text=d, font=("Segoe UI", 10), fg="#E0E6ED", bg="#2A2A2A", wraplength=ancho-40, justify="left")
+            lbl_desc.place(relx=0.05, rely=0.42, anchor="w")
+            btn_abrir = tk.Button(f, text="ABRIR", bg="#3f4fda", fg="white", font=("Segoe UI", 10, "bold"), bd=0, padx=30, pady=6, command=cmd)
+            btn_abrir.place(relx=0.05, rely=0.58, anchor="w")
+        else:
+            lbl_tit = tk.Label(f, text=t, font=("Segoe UI", 14, "bold"), fg="white", bg="#2A2A2A", justify="left")
+            lbl_tit.place(relx=0.05, rely=0.25, anchor="w")
+            lbl_desc = tk.Label(f, text=d, font=("Segoe UI", 9), fg="#E0E6ED", bg="#2A2A2A", wraplength=ancho-40, justify="left")
+            lbl_desc.place(relx=0.05, rely=0.48, anchor="w")
+            btn_abrir = tk.Button(f, text="ABRIR", bg="#3f4fda", fg="white", font=("Segoe UI", 9, "bold"), bd=0, padx=25, pady=4, command=cmd)
+            btn_abrir.place(relx=0.05, rely=0.75, anchor="w")
 
 #ENTRADAS DEL USUARIO
 
