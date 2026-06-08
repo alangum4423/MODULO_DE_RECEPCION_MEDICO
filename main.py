@@ -69,7 +69,7 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="             INICIO              ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="              INICIO               ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
