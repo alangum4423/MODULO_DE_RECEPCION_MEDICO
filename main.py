@@ -4,9 +4,36 @@ from PIL import Image, ImageTk
 import json
 import os
 
+#GUARDADO DE PACIENTES
+
+ARCHIVO_DOCTORES = "doctores.json"
+ARCHIVO_PACIENTES = "pacientes.json"
+ARCHIVO_CITAS = "citas.json"
+
+#RECUPERACION DE PACIENTES 
+if os.path.exists(ARCHIVO_PACIENTES):
+    with open(ARCHIVO_PACIENTES, "r", encoding="utf-8") as archivo:
+        pacientes_db = json.load(archivo)
+else:
+    pacientes_db = {}
+
+# RECUPERACION DE CITAS
+if os.path.exists(ARCHIVO_CITAS):
+    with open(ARCHIVO_CITAS, "r", encoding="utf-8") as archivo:
+        citas = json.load(archivo)
+else:
+    citas = []
+
+if os.path.exists(ARCHIVO_DOCTORES):
+    with open(ARCHIVO_DOCTORES, "r", encoding="utf-8") as archivo:
+        especialidades = json.load(archivo)
+else:
+    especialidades = {}
+
+
+
 
 #AQUI INICIAMOS LO SERIO
-
 class SaladeRecepcion:
 
     def __init__(self, window):
@@ -119,7 +146,7 @@ class SaladeRecepcion:
         self.card(grid, "RESERVAR CITA", "citas.jpg", "Agenda médica y turnos", 0, 1, self.vista_citas, "#3f4fda", 2, 1)
         self.card(grid, "REGISTRO\n" "PACIENTES", "registro.jpg", "Registro de\n" "nuevos pacientes\n" "en sistema", 0, 0, self.vista_registro, "#3f4fda", 1, 2)
         self.card(grid, "ENFERMERÍA", "enfermeria.jpg", "Triaje y signos vitales", 1, 1, self.vista_enfermeria, "#3f4fda", 1, 1)
-        self.card(grid, "VER AGENDA", "agenda.jpg", "Listado completo", 1, 2, self.vista_enfermeria, "#3f4fda", 1, 1)
+        self.card(grid, "VER AGENDA", "agenda.jpg", "Listado completo", 1, 2, self.vista_agenda, "#3f4fda", 1, 1)
 
 #CUADROS
     def card(self, p, t, img_ruta, d, r, c, cmd, col, colspan=1, rowspan=1):
@@ -170,187 +197,89 @@ class SaladeRecepcion:
             btn_abrir.place(relx=0.05, rely=0.75, anchor="w")
 
 #ENTRADAS DEL USUARIO
-
     def input(self, p, t):
-
-        tk.Label(
-            p,
-            text=t,
-            bg="white",
-            font=("Segoe UI", 9, "bold")
-        ).pack(anchor="w")
-
-        e = tk.Entry(
-            p,
-            font=("Segoe UI", 11),
-            bg="#F3F7FB",
-            bd=0
-        )
-
+        tk.Label(p, text=t, bg="white", font=("Segoe UI", 9, "bold")).pack(anchor="w")
+        e = tk.Entry(p, font=("Segoe UI", 11), bg="#F3F7FB", bd=0)
         e.pack(fill="x", pady=(5, 15), ipady=5)
-
         return e
 
 #REGISTRO DE PACIENTES
-
+    def guardar_pacientes(self):
+        with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
+            json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
+    def guardar_citas(self):
+        with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
+            json.dump(citas, archivo, indent=4, ensure_ascii=False)
+    
     def vista_registro(self):
-
         self.limpiar()
-
         self.sidebar("Registro")
 
-        main = tk.Frame(
-            self.window,
-            bg=self.color_bg,
-            padx=50,
-            pady=40
-        )
+        main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
+        main.grid(row=0, column=1, sticky="nsew", pady=5)
 
-        main.grid(row=0, column=1, sticky="nsew")
-
-        card = tk.Frame(
-            main,
-            bg="white",
-            padx=30,
-            pady=30
-        )
-
+        card = tk.Frame(main, bg="white", padx=30, pady=30)
         card.pack(fill="x")
 
         self.e_ci = self.input(card, "Carnet de Identidad")
-
         self.e_nombre = self.input(card, "Nombre Completo")
-
         self.e_edad = self.input(card, "Edad")
 
-        tk.Button(
-            card,
-            text="REGISTRAR PACIENTE",
-            bg=self.color_pacientes,
-            fg="white",
-            bd=0,
-            font=("Segoe UI", 11, "bold"),
-            command=self.registrar_paciente
-        ).pack(fill="x", ipady=10)
+        tk.Button(card, text="REGISTRAR PACIENTE", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
+                  command=self.registrar_paciente).pack(fill="x", ipady=10)
 
     def registrar_paciente(self):
 
         ci = self.e_ci.get()
-
         nombre = self.e_nombre.get()
-
         edad = self.e_edad.get()
 
         if not ci or not nombre:
-
-            messagebox.showerror(
-                "ERROR",
-                "Complete todos los datos"
-            )
-
+            messagebox.showerror("ERROR", "Porfavor, complete todos los datos")
             return
 
-        pacientes_db[ci] = {
-            "nombre": nombre,
-            "edad": edad
-        }
-
+        pacientes_db[ci] = {"nombre": nombre, "edad": edad}
         self.guardar_pacientes()
 
-        messagebox.showinfo(
-            "ÉXITO",
-            "Paciente registrado correctamente"
-        )
+        messagebox.showinfo("EXCELENTE", "El Paciente fue registrado correctamente")
 
 #MODULO CITAS
 
     def vista_citas(self):
 
         self.limpiar()
-
         self.sidebar("Citas")
 
-        main = tk.Frame(
-            self.window,
-            bg=self.color_bg,
-            padx=50,
-            pady=40
-        )
+        main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
+        main.grid(row=0, column=1, sticky="nsew", pady=5)
 
-        main.grid(row=0, column=1, sticky="nsew")
-
-        card = tk.Frame(
-            main,
-            bg="white",
-            padx=30,
-            pady=30
-        )
-
+        card = tk.Frame(main, bg="white", padx=30, pady=30)
         card.pack(fill="x")
 
 #PACIENTES
         lista_pacientes = []
 
         for ci, datos in pacientes_db.items():
-
             texto = f"{datos['nombre']} - CI: {ci}"
-
             lista_pacientes.append(texto)
 
-        tk.Label(
-            card,
-            text="Paciente"
-        ).pack(anchor="w")
-
-        self.c_paciente = ttk.Combobox(
-            card,
-            values=lista_pacientes,
-            state="readonly"
-        )
-
+        tk.Label(card, text="Paciente").pack(anchor="w")
+        self.c_paciente = ttk.Combobox(card, values=lista_pacientes, state="readonly")
         self.c_paciente.pack(fill="x", pady=10)
 
 #ESPECIALIDADES
-        tk.Label(
-            card,
-            text="Especialidad"
-        ).pack(anchor="w")
-
-        self.c_especialidad = ttk.Combobox(
-            card,
-            values=list(especialidades.keys()),
-            state="readonly"
-        )
-
+        tk.Label(card, text="Especialidad").pack(anchor="w")
+        self.c_especialidad = ttk.Combobox(card, values=list(especialidades.keys()), state="readonly")
         self.c_especialidad.pack(fill="x", pady=10)
+        self.c_especialidad.bind("<<ComboboxSelected>>", self.actualizar_doctores)
 
-        self.c_especialidad.bind(
-            "<<ComboboxSelected>>",
-            self.actualizar_doctores
-        )
-
-        # DOCTOR
-        tk.Label(
-            card,
-            text="Doctor"
-        ).pack(anchor="w")
-
-        self.c_doctor = ttk.Combobox(
-            card,
-            state="readonly"
-        )
-
+        # LA GRILLA DE DOCTORES (Xd)
+        tk.Label(card, text="Doctor").pack(anchor="w")
+        self.c_doctor = ttk.Combobox(card, state="readonly")
         self.c_doctor.pack(fill="x", pady=10)
 
-        tk.Button(
-            card,
-            text="RESERVAR CITA",
-            bg=self.color_accent,
-            fg="white",
-            bd=0,
-            font=("Segoe UI", 11, "bold"),
-            command=self.guardar_cita
-        ).pack(fill="x", ipady=10)
+        tk.Button(card, text="RESERVAR CITA", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
+                  command=self.guardar_cita).pack(fill="x", ipady=10)
 
     def actualizar_doctores(self, event):
 
@@ -403,9 +332,7 @@ class SaladeRecepcion:
             "ÉXITO",
             "Cita registrada correctamente"
         )
-
-    #MODULO DE ENFERMERIA Y TRIAJE
-
+#MODULO DE ENFERMERIA Y TRIAJE
     def vista_enfermeria(self):
 
         self.limpiar()
@@ -419,7 +346,7 @@ class SaladeRecepcion:
             pady=40
         )
 
-        main.grid(row=0, column=1, sticky="nsew")
+        main.grid(row=0, column=1, sticky="nsew", pady=5)
 
         card = tk.Frame(
             main,
@@ -462,7 +389,7 @@ class SaladeRecepcion:
         tk.Button(
             card,
             text="GUARDAR TRIAJE",
-            bg=self.color_enfermeria,
+            bg="#3f4fda",
             fg="white",
             bd=0,
             font=("Segoe UI", 11, "bold"),
@@ -495,22 +422,13 @@ class SaladeRecepcion:
             "Triaje guardado correctamente"
         )
 
-    #AGENDA DE PACIENTES
-
+#AGENDA DE PACIENTES
     def vista_agenda(self):
-
         self.limpiar()
-
         self.sidebar("Agenda")
 
-        main = tk.Frame(
-            self.window,
-            bg=self.color_bg,
-            padx=20,
-            pady=20
-        )
-
-        main.grid(row=0, column=1, sticky="nsew")
+        main = tk.Frame(self.window, bg="#d5e3ec", padx=20, pady=20)
+        main.grid(row=0, column=1, sticky="nsew", pady=5)
 
         tabla = ttk.Treeview(
             main,
@@ -557,52 +475,6 @@ class SaladeRecepcion:
             )
 
         tabla.pack(fill="both", expand=True)
-
-
-
-#GUARDADO DE PACIENTES
-
-ARCHIVO_DOCTORES = "doctores.json"
-ARCHIVO_PACIENTES = "pacientes.json"
-ARCHIVO_CITAS = "citas.json"
-
-#LISTA DE DOCTORES
-if os.path.exists(ARCHIVO_DOCTORES):
-    with open(ARCHIVO_DOCTORES, "r", encoding="utf-8") as archivo:
-        especialidades = json.load(archivo)
-
-else:
-    especialidades = {}
-
-#RECUPERACION DE PACIENTES 
-if os.path.exists(ARCHIVO_PACIENTES):
-    with open(ARCHIVO_PACIENTES, "r", encoding="utf-8") as archivo:
-        pacientes_db = json.load(archivo)
-
-else:
-    pacientes_db = {}
-
-#RECUPERACION DE CITAS, XD EN TEORIA SE DEBERIA CARGAR AQUI 
-if os.path.exists(ARCHIVO_CITAS):
-    with open(ARCHIVO_CITAS, "r", encoding="utf-8") as archivo:
-        citas = json.load(archivo)
-
-else:
-    citas = []
-
-#GUARDADO EN JSON
-
-    def guardar_pacientes(self):
-        with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
-            json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
-
-    def guardar_citas(self):
-        with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
-            json.dump(citas, archivo, indent=4, ensure_ascii=False)
-
-
-
-
 
 root = tk.Tk()
 app = SaladeRecepcion(root)  
