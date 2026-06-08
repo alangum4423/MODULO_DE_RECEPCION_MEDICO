@@ -84,14 +84,14 @@ class SaladeRecepcion:
 
         tk.Button(
             side,
-            text="🏠",
+            text="🩺",
             bg="#2474B5",
             fg="white",
             bd=0,
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="             INICIO3             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="    ESPECIALIDADES   ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -238,7 +238,6 @@ class SaladeRecepcion:
         messagebox.showinfo("EXCELENTE", "El Paciente fue registrado correctamente")
 
 #MODULO CITAS
-
     def vista_citas(self):
 
         self.limpiar()
