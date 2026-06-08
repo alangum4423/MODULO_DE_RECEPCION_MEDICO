@@ -4,20 +4,17 @@ from PIL import Image, ImageTk
 import json
 import os
 
-#GUARDADO DE PACIENTES
-
 ARCHIVO_DOCTORES = "doctores.json"
 ARCHIVO_PACIENTES = "pacientes.json"
 ARCHIVO_CITAS = "citas.json"
 
-#RECUPERACION DE PACIENTES 
+#RUTAS Y ARCHIVOS
 if os.path.exists(ARCHIVO_PACIENTES):
     with open(ARCHIVO_PACIENTES, "r", encoding="utf-8") as archivo:
         pacientes_db = json.load(archivo)
 else:
     pacientes_db = {}
 
-# RECUPERACION DE CITAS
 if os.path.exists(ARCHIVO_CITAS):
     with open(ARCHIVO_CITAS, "r", encoding="utf-8") as archivo:
         citas = json.load(archivo)
@@ -29,9 +26,6 @@ if os.path.exists(ARCHIVO_DOCTORES):
         especialidades = json.load(archivo)
 else:
     especialidades = {}
-
-
-
 
 #AQUI INICIAMOS LO SERIO
 class SaladeRecepcion:
@@ -282,145 +276,73 @@ class SaladeRecepcion:
                   command=self.guardar_cita).pack(fill="x", ipady=10)
 
     def actualizar_doctores(self, event):
-
+    
         especialidad = self.c_especialidad.get()
-
         lista = []
-
         for doctor in especialidades[especialidad]:
-
             texto = f"{doctor['nombre']} - {doctor['hora']}"
-
             lista.append(texto)
-
         self.c_doctor["values"] = lista
 
     def guardar_cita(self):
-
         paciente = self.c_paciente.get()
-
         especialidad = self.c_especialidad.get()
-
         doctor = self.c_doctor.get()
 
         if not paciente or not especialidad or not doctor:
-
             messagebox.showerror(
                 "ERROR",
-                "Complete todos los campos"
-            )
-
+                "Complete todos los campos")
             return
 
         ci = paciente.split("CI: ")[1]
-
         nombre = pacientes_db[ci]["nombre"]
-
-        nueva_cita = {
-            "paciente": nombre,
-            "ci": ci,
-            "especialidad": especialidad,
-            "doctor": doctor,
-            "triaje": "Pendiente"
-        }
-
+        nueva_cita = {"paciente": nombre, "ci": ci, "especialidad": especialidad, "doctor": doctor, "triaje": "Pendiente"}
         citas.append(nueva_cita)
-
         self.guardar_citas()
-
-        messagebox.showinfo(
-            "ÉXITO",
-            "Cita registrada correctamente"
-        )
+        messagebox.showinfo("ÉXITO", "Cita registrada correctamente")
 #MODULO DE ENFERMERIA Y TRIAJE
     def vista_enfermeria(self):
 
         self.limpiar()
-
         self.sidebar("Enfermería")
 
-        main = tk.Frame(
-            self.window,
-            bg=self.color_bg,
-            padx=50,
-            pady=40
-        )
-
+        main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
         main.grid(row=0, column=1, sticky="nsew", pady=5)
-
-        card = tk.Frame(
-            main,
-            bg="white",
-            padx=30,
-            pady=30
-        )
-
+        card = tk.Frame(main, bg="white", padx=30, pady=30)
         card.pack(fill="x")
 
         pendientes = []
 
         for c in citas:
-
             if c["triaje"] == "Pendiente":
+                pendientes.append(f"{c['paciente']} - CI: {c['ci']}")
+        tk.Label(card, text="Paciente").pack(anchor="w")
 
-                pendientes.append(
-                    f"{c['paciente']} - CI: {c['ci']}"
-                )
-
-        tk.Label(
-            card,
-            text="Paciente"
-        ).pack(anchor="w")
-
-        self.c_triaje = ttk.Combobox(
-            card,
-            values=pendientes,
-            state="readonly"
-        )
-
+        self.c_triaje = ttk.Combobox(card, values=pendientes, state="readonly")
         self.c_triaje.pack(fill="x", pady=10)
-
         self.e_pa = self.input(card, "Presión Arterial")
-
         self.e_temp = self.input(card, "Temperatura")
-
         self.e_peso = self.input(card, "Peso")
 
-        tk.Button(
-            card,
-            text="GUARDAR TRIAJE",
-            bg="#3f4fda",
-            fg="white",
-            bd=0,
-            font=("Segoe UI", 11, "bold"),
-            command=self.guardar_triaje
-        ).pack(fill="x", ipady=10)
+        tk.Button(card, text="GUARDAR TRIAJE", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
+                  command=self.guardar_triaje).pack(fill="x", ipady=10)
 
     def guardar_triaje(self):
 
         paciente = self.c_triaje.get()
-
         if not paciente:
             return
-
         ci = paciente.split("CI: ")[1]
-
         for c in citas:
-
             if c["ci"] == ci:
-
                 c["triaje"] = (
                     f"PA: {self.e_pa.get()} | "
                     f"TEMP: {self.e_temp.get()} | "
-                    f"PESO: {self.e_peso.get()}"
-                )
-
+                    f"PESO: {self.e_peso.get()}")
         self.guardar_citas()
 
-        messagebox.showinfo(
-            "ÉXITO",
-            "Triaje guardado correctamente"
-        )
+        messagebox.showinfo("EXCELENTE", "Sus datos han sido guardado correctamente")
 
 #AGENDA DE PACIENTES
     def vista_agenda(self):
@@ -432,48 +354,14 @@ class SaladeRecepcion:
 
         tabla = ttk.Treeview(
             main,
-            columns=(
-                "Paciente",
-                "CI",
-                "Especialidad",
-                "Doctor",
-                "Triaje"
-            ),
-            show="headings"
-        )
-
-        columnas = [
-            "Paciente",
-            "CI",
-            "Especialidad",
-            "Doctor",
-            "Triaje"
-        ]
+            columns=("Paciente", "CI", "Especialidad", "Doctor", "Triaje"), show="headings")
+        columnas = ["Paciente", "CI", "Especialidad", "Doctor", "Triaje"]
 
         for col in columnas:
-
             tabla.heading(col, text=col)
-
-            tabla.column(
-                col,
-                width=150,
-                anchor="center"
-            )
-
+            tabla.column(col, width=150, anchor="center")
         for c in citas:
-
-            tabla.insert(
-                "",
-                "end",
-                values=(
-                    c["paciente"],
-                    c["ci"],
-                    c["especialidad"],
-                    c["doctor"],
-                    c["triaje"]
-                )
-            )
-
+            tabla.insert("", "end", values=(c["paciente"], c["ci"], c["especialidad"], c["doctor"], c["triaje"]))
         tabla.pack(fill="both", expand=True)
 
 root = tk.Tk()
