@@ -4,55 +4,12 @@ from PIL import Image, ImageTk
 import json
 import os
 
-#GUARDADO DE PACIENTES
-
-ARCHIVO_DOCTORES = "doctores.json"
-ARCHIVO_PACIENTES = "pacientes.json"
-ARCHIVO_CITAS = "citas.json"
-
-#LISTA DE DOCTORES
-
-if os.path.exists(ARCHIVO_DOCTORES):
-
-    with open(ARCHIVO_DOCTORES, "r", encoding="utf-8") as archivo:
-
-        especialidades = json.load(archivo)
-
-else:
-
-    especialidades = {}
-
-#RECUPERACION DE PACIENTES 
-
-if os.path.exists(ARCHIVO_PACIENTES):
-
-    with open(ARCHIVO_PACIENTES, "r", encoding="utf-8") as archivo:
-
-        pacientes_db = json.load(archivo)
-
-else:
-
-    pacientes_db = {}
-
-#RECUPERACION DE CITAS, XD EN TEORIA SE DEBERIA CARGAR AQUI 
-
-if os.path.exists(ARCHIVO_CITAS):
-
-    with open(ARCHIVO_CITAS, "r", encoding="utf-8") as archivo:
-
-        citas = json.load(archivo)
-
-else:
-
-    citas = []
-
 
 #AQUI INICIAMOS LO SERIO
 
 class SaladeRecepcion:
 
     def __init__(self, window):
-
         self.window = window
         self.window.title("SISTEMA MÉDICO | Hospital Obrero")
         self.window.geometry("1100x800+0+0")
@@ -61,34 +18,12 @@ class SaladeRecepcion:
         self.window.iconbitmap("hosp.ico")
         self.color_bg = "#d5e3ec"
         self.color_accent = "#0E7AA8"
-        self.color_enfermeria = "#3f4fda"
-        self.color_pacientes = "#3f4fda"
-
-
-
         self.window.grid_columnconfigure(1, weight=1)
         self.window.grid_rowconfigure(0, weight=1)
-
         self.mostrar_panel_recepcion()
 
-#GUARDADO EN JSON
 
-    def guardar_pacientes(self):
-        with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
-            json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
-
-    def guardar_citas(self):
-        with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
-            json.dump(citas, archivo, indent=4, ensure_ascii=False)
-
-#LIMPIEZA
-
-    def limpiar(self):
-        for widget in self.window.winfo_children():
-            widget.destroy()
-
-#BARRA LATERAL (AUN EN PROCESO)
-
+#BARRA LATERAL (AUN EN PROCESO)    
     def sidebar(self, subtitulo):
 
         side = tk.Frame(self.window, bg="#0067c0", width=240)
@@ -113,18 +48,18 @@ class SaladeRecepcion:
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="             INICIO1             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="             INICIO              ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
-            text="🏠",
+            text="📖",
             bg="#2474B5",
             fg="white",
             bd=0,
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="             INICIO2             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="           HISTORIA            ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -139,14 +74,14 @@ class SaladeRecepcion:
 
         tk.Button(
             side,
-            text="🏠",
+            text="📍",
             bg="#2474B5",
             fg="white",
             bd=0,
             font=("Segoe UI", 15, "bold"),
             command=self.mostrar_panel_recepcion
         ).pack(fill="x", pady=(40,0))  
-        tk.Label(side, text="             INICIO4             ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
+        tk.Label(side, text="         UBICACION         ", font=("Segoe UI", 7), bg= "#2474B5", fg="white").pack()
 
         tk.Button(
             side,
@@ -157,15 +92,17 @@ class SaladeRecepcion:
             command=self.window.quit
         ).pack(side="bottom", fill="x", ipady=15)  
 
-#EL INFIERNO DE LA INTERFAZ PRINCIPAL 9AUNQUE SI SE VE MODERNA)
+#EL INFIERNO DE LA INTERFAZ PRINCIPAL (AUNQUE SI SE VE MODERNA)
+    def limpiar(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
 
     def mostrar_panel_recepcion(self):
-
         self.limpiar()
         self.sidebar("Sala de Recepción")
-
+          
         main = tk.Frame(self.window, bg=self.color_bg, padx=40, pady=40)
-        main.grid(row=0, column=1, sticky="nsew", pady=5)
+        main.grid(row=0, column=1, sticky="nsew", pady=5)   
         
         self.fuente_tit = font.Font(family="Segoe UI", size=26, weight="bold")
         tk.Label(main, text="Buenos Días", font=self.fuente_tit, bg=self.color_bg, fg="Black").pack()
@@ -179,10 +116,10 @@ class SaladeRecepcion:
         grid.pack(fill="both", expand=True)
         grid.columnconfigure((0, 1, 2), weight=1)
         grid.rowconfigure((0, 1), weight=1) 
-        self.card(grid, "RESERVAR CITA", "citas.jpg", "Agenda médica y turnos", 0, 1, self.vista_citas, self.color_enfermeria, 2, 1)
-        self.card(grid, "REGISTRO\n" "PACIENTES", "registro.jpg", "Registro de\n" "nuevos pacientes\n" "en sistema", 0, 0, self.vista_registro, self.color_pacientes, 1, 2)
-        self.card(grid, "ENFERMERÍA", "enfermeria.jpg", "Triaje y signos vitales", 1, 1, self.vista_enfermeria, self.color_enfermeria, 1, 1)
-        self.card(grid, "VER AGENDA", "agenda.jpg", "Listado completo", 1, 2, self.vista_enfermeria, self.color_enfermeria, 1, 1)
+        self.card(grid, "RESERVAR CITA", "citas.jpg", "Agenda médica y turnos", 0, 1, self.vista_citas, "#3f4fda", 2, 1)
+        self.card(grid, "REGISTRO\n" "PACIENTES", "registro.jpg", "Registro de\n" "nuevos pacientes\n" "en sistema", 0, 0, self.vista_registro, "#3f4fda", 1, 2)
+        self.card(grid, "ENFERMERÍA", "enfermeria.jpg", "Triaje y signos vitales", 1, 1, self.vista_enfermeria, "#3f4fda", 1, 1)
+        self.card(grid, "VER AGENDA", "agenda.jpg", "Listado completo", 1, 2, self.vista_enfermeria, "#3f4fda", 1, 1)
 
 #CUADROS
     def card(self, p, t, img_ruta, d, r, c, cmd, col, colspan=1, rowspan=1):
@@ -263,7 +200,7 @@ class SaladeRecepcion:
         self.sidebar("Registro")
 
         main = tk.Frame(
-            self.root,
+            self.window,
             bg=self.color_bg,
             padx=50,
             pady=40
@@ -334,7 +271,7 @@ class SaladeRecepcion:
         self.sidebar("Citas")
 
         main = tk.Frame(
-            self.root,
+            self.window,
             bg=self.color_bg,
             padx=50,
             pady=40
@@ -476,7 +413,7 @@ class SaladeRecepcion:
         self.sidebar("Enfermería")
 
         main = tk.Frame(
-            self.root,
+            self.window,
             bg=self.color_bg,
             padx=50,
             pady=40
@@ -567,7 +504,7 @@ class SaladeRecepcion:
         self.sidebar("Agenda")
 
         main = tk.Frame(
-            self.root,
+            self.window,
             bg=self.color_bg,
             padx=20,
             pady=20
@@ -621,6 +558,52 @@ class SaladeRecepcion:
 
         tabla.pack(fill="both", expand=True)
 
+
+
+#GUARDADO DE PACIENTES
+
+ARCHIVO_DOCTORES = "doctores.json"
+ARCHIVO_PACIENTES = "pacientes.json"
+ARCHIVO_CITAS = "citas.json"
+
+#LISTA DE DOCTORES
+if os.path.exists(ARCHIVO_DOCTORES):
+    with open(ARCHIVO_DOCTORES, "r", encoding="utf-8") as archivo:
+        especialidades = json.load(archivo)
+
+else:
+    especialidades = {}
+
+#RECUPERACION DE PACIENTES 
+if os.path.exists(ARCHIVO_PACIENTES):
+    with open(ARCHIVO_PACIENTES, "r", encoding="utf-8") as archivo:
+        pacientes_db = json.load(archivo)
+
+else:
+    pacientes_db = {}
+
+#RECUPERACION DE CITAS, XD EN TEORIA SE DEBERIA CARGAR AQUI 
+if os.path.exists(ARCHIVO_CITAS):
+    with open(ARCHIVO_CITAS, "r", encoding="utf-8") as archivo:
+        citas = json.load(archivo)
+
+else:
+    citas = []
+
+#GUARDADO EN JSON
+
+    def guardar_pacientes(self):
+        with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
+            json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
+
+    def guardar_citas(self):
+        with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
+            json.dump(citas, archivo, indent=4, ensure_ascii=False)
+
+
+
+
+
 root = tk.Tk()
-app = SaladeRecepcion(root)
+app = SaladeRecepcion(root)  
 root.mainloop()
