@@ -29,7 +29,6 @@ else:
 
 #AQUI INICIAMOS LO SERIO
 class SaladeRecepcion:
-
     def __init__(self, window):
         self.window = window
         self.window.title("SISTEMA MÉDICO | Hospital Obrero")
@@ -422,10 +421,10 @@ class SaladeRecepcion:
         for c in citas:
             triaje_text = c.get("triaje", "Pendiente")
             self.tabla.insert("", "end", values=(
-                c["paciente"], 
-                c["ci"], 
-                c["especialidad"], 
-                c["doctor"], 
+                c.get("paciente"),
+                c.get("ci"),
+                c.get("especialidad"),
+                c.get("doctor"),
                 triaje_text
             ))
         self.tabla.pack(fill="both", expand=True)
