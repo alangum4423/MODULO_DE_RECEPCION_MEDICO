@@ -46,7 +46,6 @@ class SaladeRecepcion:
 
 #BARRA LATERAL (AUN EN PROCESO)    
     def sidebar(self, subtitulo):
-
         side = tk.Frame(self.window, bg="#0067c0", width=240)
         side.grid(row=0, column=0, sticky="ns", padx=5, pady=5)
         side.grid_propagate(False)
@@ -112,7 +111,7 @@ class SaladeRecepcion:
             bd=0,
             command=self.window.quit
         ).pack(side="bottom", fill="x", ipady=15)  
-
+        
 #EL INFIERNO DE LA INTERFAZ PRINCIPAL (AUNQUE SI SE VE MODERNA)
     def limpiar(self):
         for widget in self.window.winfo_children():
@@ -239,48 +238,48 @@ class SaladeRecepcion:
 
 #MODULO CITAS
     def vista_citas(self):
-
         self.limpiar()
         self.sidebar("Citas")
 
-        main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
-        main.grid(row=0, column=1, sticky="nsew", pady=5)
+        main = tk.Frame(self.window, bg=self.color_bg)
+        main.grid(row=0, column=1, sticky="nsew", pady=5, padx=5)
+        
+        main.grid_columnconfigure(0, weight=1)
+        main.grid_columnconfigure(1, weight=1)
+        main.grid_rowconfigure(0, weight=1)
 
-        card = tk.Frame(main, bg="white", padx=30, pady=30)
-        card.pack(fill="x")
+        left = tk.Frame(main, bg=self.color_bg, padx=30, pady=30)
+        left.grid(row=0, column=0, sticky="nsew")
+        card = tk.Frame(left, bg="white", padx=40, pady=40, relief="flat")
+        card.pack(fill="both", expand=True)
 
-#PACIENTES
-        lista_pacientes = []
+        tk.Label(card, text="📅 Reservar Nueva Cita", 
+                 font=("Segoe UI", 24, "bold"), bg="white", fg="#1e3a8a").pack(anchor="w", pady=(0, 30))
 
-        for ci, datos in pacientes_db.items():
-            texto = f"{datos['nombre']} - CI: {ci}"
-            lista_pacientes.append(texto)
-
-        tk.Label(card, text="Paciente").pack(anchor="w")
-        self.c_paciente = ttk.Combobox(card, values=lista_pacientes, state="readonly")
-        self.c_paciente.pack(fill="x", pady=10)
-
-#ESPECIALIDADES
-        tk.Label(card, text="Especialidad").pack(anchor="w")
-        self.c_especialidad = ttk.Combobox(card, values=list(especialidades.keys()), state="readonly")
-        self.c_especialidad.pack(fill="x", pady=10)
+        tk.Label(card, text="Paciente", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        lista_pacientes = [f"{datos['nombre']} - CI: {ci}" for ci, datos in pacientes_db.items()]
+        self.c_paciente = ttk.Combobox(card, values=lista_pacientes, state="readonly", font=("Segoe UI", 10))
+        self.c_paciente.pack(fill="x", pady=(5, 18), ipady=6)
+        tk.Label(card, text="Especialidad", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.c_especialidad = ttk.Combobox(card, values=list(especialidades.keys()), 
+                                         state="readonly", font=("Segoe UI", 10))
+        self.c_especialidad.pack(fill="x", pady=(5, 18), ipady=6)
         self.c_especialidad.bind("<<ComboboxSelected>>", self.actualizar_doctores)
+        tk.Label(card, text="Doctor", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.c_doctor = ttk.Combobox(card, state="readonly", font=("Segoe UI", 10))
+        self.c_doctor.pack(fill="x", pady=(5, 30), ipady=6)
 
-        # LA GRILLA DE DOCTORES (Xd)
-        tk.Label(card, text="Doctor").pack(anchor="w")
-        self.c_doctor = ttk.Combobox(card, state="readonly")
-        self.c_doctor.pack(fill="x", pady=10)
-
-        tk.Button(card, text="RESERVAR CITA", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
-                  command=self.guardar_cita).pack(fill="x", ipady=10)
+        tk.Button(card, text="RESERVAR CITA", bg="#3f4fda", fg="white", bd=0,
+                  font=("Segoe UI", 12, "bold"), height=2,
+                  command=self.guardar_cita).pack(fill="x", pady=10)
 
     def actualizar_doctores(self, event):
-    
         especialidad = self.c_especialidad.get()
         lista = []
-        for doctor in especialidades[especialidad]:
-            texto = f"{doctor['nombre']} - {doctor['hora']}"
-            lista.append(texto)
+        if especialidad in especialidades:
+            for doctor in especialidades[especialidad]:
+                texto = f"{doctor['nombre']} - {doctor['hora']}"
+                lista.append(texto)
         self.c_doctor["values"] = lista
 
     def guardar_cita(self):
@@ -289,17 +288,22 @@ class SaladeRecepcion:
         doctor = self.c_doctor.get()
 
         if not paciente or not especialidad or not doctor:
-            messagebox.showerror(
-                "ERROR",
-                "Complete todos los campos")
+            messagebox.showerror("ERROR", "Porfavor complete todos los campos")
             return
 
         ci = paciente.split("CI: ")[1]
         nombre = pacientes_db[ci]["nombre"]
-        nueva_cita = {"paciente": nombre, "ci": ci, "especialidad": especialidad, "doctor": doctor, "triaje": "Pendiente"}
+        nueva_cita = {
+            "paciente": nombre, 
+            "ci": ci, 
+            "especialidad": especialidad, 
+            "doctor": doctor, 
+            "triaje": "Pendiente"
+        }
         citas.append(nueva_cita)
         self.guardar_citas()
         messagebox.showinfo("ÉXITO", "Cita registrada correctamente")
+
 #MODULO DE ENFERMERIA Y TRIAJE
     def vista_enfermeria(self):
 
@@ -308,24 +312,33 @@ class SaladeRecepcion:
 
         main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
         main.grid(row=0, column=1, sticky="nsew", pady=5)
-        card = tk.Frame(main, bg="white", padx=30, pady=30)
-        card.pack(fill="x")
+        card = tk.Frame(main, bg="white", padx=50, pady=50)
+        card.pack(fill="both", expand=True, padx=40, pady=30)
 
         pendientes = []
 
-        for c in citas:
-            if c["triaje"] == "Pendiente":
-                pendientes.append(f"{c['paciente']} - CI: {c['ci']}")
-        tk.Label(card, text="Paciente").pack(anchor="w")
+        tk.Label(card, text="🩺 Triaje y Signos Vitales", 
+                 font=("Segoe UI", 26, "bold"), bg="white", fg="#1e3a8a").pack(anchor="w", pady=(0, 35))
 
-        self.c_triaje = ttk.Combobox(card, values=pendientes, state="readonly")
-        self.c_triaje.pack(fill="x", pady=10)
-        self.e_pa = self.input(card, "Presión Arterial")
-        self.e_temp = self.input(card, "Temperatura")
-        self.e_peso = self.input(card, "Peso")
+        tk.Label(card, text="Paciente Pendiente", font=("Segoe UI", 12, "bold"), bg="white").pack(anchor="w")
+        pendientes = [f"{c['paciente']} - CI: {c['ci']}" for c in citas if c.get("triaje") == "Pendiente"]
+        self.c_triaje = ttk.Combobox(card, values=pendientes, state="readonly", font=("Segoe UI", 10))
+        self.c_triaje.pack(fill="x", pady=(5, 25), ipady=6)
 
-        tk.Button(card, text="GUARDAR TRIAJE", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
-                  command=self.guardar_triaje).pack(fill="x", ipady=10)
+        signos_frame = tk.Frame(card, bg="white")
+        signos_frame.pack(fill="x", pady=10)
+        tk.Label(signos_frame, text="Presión Arterial (PA)", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_pa = tk.Entry(signos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_pa.pack(fill="x", pady=(5, 18), ipady=8)
+        tk.Label(signos_frame, text="Temperatura (°C)", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_temp = tk.Entry(signos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_temp.pack(fill="x", pady=(5, 18), ipady=8)
+        tk.Label(signos_frame, text="Peso (kg)", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_peso = tk.Entry(signos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_peso.pack(fill="x", pady=(5, 30), ipady=8)
+
+        tk.Button(card, text="GUARDAR DATOS", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 13, "bold"), height=2,
+                  command=self.guardar_triaje).pack(fill="x", pady=10)
 
     def guardar_triaje(self):
 
@@ -348,20 +361,56 @@ class SaladeRecepcion:
         self.limpiar()
         self.sidebar("Agenda")
 
-        main = tk.Frame(self.window, bg="#d5e3ec", padx=20, pady=20)
-        main.grid(row=0, column=1, sticky="nsew", pady=5)
+        main = tk.Frame(self.window, bg=self.color_bg)
+        main.grid(row=0, column=1, sticky="nsew", pady=5, padx=5)
+        main.grid_rowconfigure(0, weight=1)
+        main.grid_columnconfigure(0, weight=1)
 
-        tabla = ttk.Treeview(
-            main,
-            columns=("Paciente", "CI", "Especialidad", "Doctor", "Triaje"), show="headings")
-        columnas = ["Paciente", "CI", "Especialidad", "Doctor", "Triaje"]
+        header = tk.Frame(main, bg="white", height=100)
+        header.pack(fill="x", padx=30, pady=(30, 0))
+        header.pack_propagate(False)
 
-        for col in columnas:
-            tabla.heading(col, text=col)
-            tabla.column(col, width=150, anchor="center")
+        tk.Label(header, text="📋 Agenda General de Citas", 
+                 font=("Segoe UI", 26, "bold"), bg="white", fg="#1e3a8a").pack(side="left", padx=40, pady=25)
+        total_citas = len(citas)
+        pendientes = len([c for c in citas if c.get("triaje") == "Pendiente"])
+        info_frame = tk.Frame(header, bg="white")
+        info_frame.pack(side="right", padx=40)
+        tk.Label(info_frame, text=f"Total: {total_citas}", 
+                 font=("Segoe UI", 12, "bold"), bg="white", fg="#334155").pack(anchor="e")
+        tk.Label(info_frame, text=f"Pendientes: {pendientes}", 
+                 font=("Segoe UI", 12), bg="white", fg="#ef4444").pack(anchor="e")
+        table_frame = tk.Frame(main, bg="white", padx=30, pady=20)
+        table_frame.pack(fill="both", expand=True, padx=30, pady=(0, 30))
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure("Treeview", 
+                       background="#f8fafc",
+                       foreground="#1e2937",
+                       fieldbackground="#f8fafc",
+                       font=("Segoe UI", 10),
+                       rowheight=28)
+        style.configure("Treeview.Heading", 
+                       background="#1e40af", 
+                       foreground="white",
+                       font=("Segoe UI", 11, "bold"))
+        style.map("Treeview.Heading", background=[('active', '#3b82f6')])
+        columnas = ("Paciente", "CI", "Especialidad", "Doctor", "Triaje")
+        self.tabla = ttk.Treeview(table_frame, columns=columnas, show="headings", style="Treeview")
+        anchos = [220, 100, 160, 200, 280]
+        for col, ancho in zip(columnas, anchos):
+            self.tabla.heading(col, text=col)
+            self.tabla.column(col, width=ancho, anchor="center")
         for c in citas:
-            tabla.insert("", "end", values=(c["paciente"], c["ci"], c["especialidad"], c["doctor"], c["triaje"]))
-        tabla.pack(fill="both", expand=True)
+            triaje_text = c.get("triaje", "Pendiente")
+            self.tabla.insert("", "end", values=(
+                c["paciente"], 
+                c["ci"], 
+                c["especialidad"], 
+                c["doctor"], 
+                triaje_text
+            ))
+        self.tabla.pack(fill="both", expand=True)
 
 root = tk.Tk()
 app = SaladeRecepcion(root)  

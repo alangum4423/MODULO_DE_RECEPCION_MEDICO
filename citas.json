@@ -7,17 +7,6 @@
         "triaje": "PA: 12 | TEMP: 47 | PESO: 78"
     },
     {
-        "paciente": "Alan Gutierrez Maidana",
-        "ci": "12668086",
-        "especialidad": "Traumatología",
-        "doctor": "Dr. Emmett Brown - 16:00",
-        "triaje": "PA: 1232456 | TEMP: 12 | PESO: 32"
-    },
-    {
-        "paciente": "Alan Gutierrez Maidana",
-        "ci": "12668086",
-        "especialidad": "Laboratorio",
-        "doctor": "Dr. Barry Allen - 08:30",
-        "triaje": "PA: 1232456 | TEMP: 12 | PESO: 32"
+
     }
 ]
