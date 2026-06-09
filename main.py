@@ -200,29 +200,41 @@ class SaladeRecepcion:
     def guardar_pacientes(self):
         with open(ARCHIVO_PACIENTES, "w", encoding="utf-8") as archivo:
             json.dump(pacientes_db, archivo, indent=4, ensure_ascii=False)
+            
     def guardar_citas(self):
         with open(ARCHIVO_CITAS, "w", encoding="utf-8") as archivo:
             json.dump(citas, archivo, indent=4, ensure_ascii=False)
-    
+
     def vista_registro(self):
         self.limpiar()
         self.sidebar("Registro")
 
-        main = tk.Frame(self.window, bg=self.color_bg, padx=50, pady=40)
-        main.grid(row=0, column=1, sticky="nsew", pady=5)
+        # Frame principal adaptado con grillas expandibles
+        main = tk.Frame(self.window, bg=self.color_bg)
+        main.grid(row=0, column=1, sticky="nsew", pady=5, padx=5)
+        main.grid_rowconfigure(0, weight=1)
+        main.grid_columnconfigure(0, weight=1)
 
-        card = tk.Frame(main, bg="white", padx=30, pady=30)
-        card.pack(fill="x")
-
-        self.e_ci = self.input(card, "Carnet de Identidad")
-        self.e_nombre = self.input(card, "Nombre Completo")
-        self.e_edad = self.input(card, "Edad")
-
-        tk.Button(card, text="REGISTRAR PACIENTE", bg="#3f4fda", fg="white", bd=0, font=("Segoe UI", 11, "bold"), 
-                  command=self.registrar_paciente).pack(fill="x", ipady=10)
+        card = tk.Frame(main, bg="white", padx=50, pady=50)
+        card.pack(fill="both", expand=True, padx=40, pady=30)
+        tk.Label(card, text="👤 Registro de Nuevos Pacientes", 
+                 font=("Segoe UI", 26, "bold"), bg="white", fg="#1e3a8a").pack(anchor="w", pady=(0, 35))
+        campos_frame = tk.Frame(card, bg="white")
+        campos_frame.pack(fill="x", pady=10)
+        tk.Label(campos_frame, text="Carnet de Identidad (CI)", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_ci = tk.Entry(campos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_ci.pack(fill="x", pady=(5, 18), ipady=8)
+        tk.Label(campos_frame, text="Nombre Completo", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_nombre = tk.Entry(campos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_nombre.pack(fill="x", pady=(5, 18), ipady=8)
+        tk.Label(campos_frame, text="Edad", font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w")
+        self.e_edad = tk.Entry(campos_frame, font=("Segoe UI", 11), bg="#F8FAFC", relief="solid", bd=1)
+        self.e_edad.pack(fill="x", pady=(5, 30), ipady=8)
+        tk.Button(card, text="REGISTRAR PACIENTE", bg="#3f4fda", fg="white", bd=0, 
+                  font=("Segoe UI", 13, "bold"), height=2,
+                  command=self.registrar_paciente).pack(fill="x", pady=10)
 
     def registrar_paciente(self):
-
         ci = self.e_ci.get()
         nombre = self.e_nombre.get()
         edad = self.e_edad.get()
@@ -233,6 +245,10 @@ class SaladeRecepcion:
 
         pacientes_db[ci] = {"nombre": nombre, "edad": edad}
         self.guardar_pacientes()
+
+        self.e_ci.delete(0, tk.END)
+        self.e_nombre.delete(0, tk.END)
+        self.e_edad.delete(0, tk.END)
 
         messagebox.showinfo("EXCELENTE", "El Paciente fue registrado correctamente")
 
@@ -302,7 +318,9 @@ class SaladeRecepcion:
         }
         citas.append(nueva_cita)
         self.guardar_citas()
-        messagebox.showinfo("ÉXITO", "Cita registrada correctamente")
+        messagebox.showinfo("EXCELENTE", "Cita registrada correctamente")
+
+
 
 #MODULO DE ENFERMERIA Y TRIAJE
     def vista_enfermeria(self):

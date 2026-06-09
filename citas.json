@@ -6,7 +6,19 @@
         "doctor": "Dr. Hannibal Lecter - 18:00",
         "triaje": "PA: 12 | TEMP: 47 | PESO: 78"
     },
+    {},
     {
-
+        "paciente": "Dwight Kurt Schrutte",
+        "ci": "45679012",
+        "especialidad": "Laboratorio",
+        "doctor": "Dr. Victor Fries - 11:00",
+        "triaje": "Pendiente"
+    },
+    {
+        "paciente": "Alan Gutierrez Maidana",
+        "ci": "12668086",
+        "especialidad": "Urología",
+        "doctor": "Dr. Percival Cox - 16:30",
+        "triaje": "Pendiente"
     }
 ]
