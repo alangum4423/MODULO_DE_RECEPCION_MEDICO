@@ -18,6 +18,15 @@
         "ci": "12668086",
         "especialidad": "Urología",
         "doctor": "Dr. Percival Cox - 16:30",
-        "triaje": "Pendiente"
+        "triaje": "PA: we mmHg  |  T°: qwe°C  |  Peso: qe kg  |  Talla: e cm  |  FC: eqe lpm  |  SpO₂: qeqedad%  |  Obs: dadsfsd"
+    },
+    {
+        "paciente": "Kevin Owen Vallejos Lopez",
+        "ci": "12850930",
+        "especialidad": "Inmunología",
+        "doctor": "Dr. John Zoidberg - 15:45",
+        "triaje": "Pendiente",
+        "motivo": "sfsdfasd",
+        "fecha": "08/06/2026 23:59"
     }
 ]
