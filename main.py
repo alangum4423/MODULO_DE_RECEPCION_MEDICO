@@ -210,12 +210,8 @@ class SistemaRecepcion:
 
     def _boton_primario(self, parent, texto, cmd, color=None):
         color = color or C["azul_claro"]
-        btn = tk.Button(parent, text=texto, bg=color, fg=C["blanco"], font=FUENTES["boton"], relief="flat", bd=0,
-                        activebackground=C["azul_hover"],
-                        activeforeground=C["blanco"],
-                        cursor="hand2",
-                        command=cmd,
-                        padx=20, pady=12)
+        btn = tk.Button(parent, text=texto, bg=color, fg=C["blanco"], font=FUENTES["boton"], relief="flat", bd=0, 
+                        activebackground=C["azul_hover"], activeforeground=C["blanco"], cursor="hand2", command=cmd, padx=20, pady=12)
         btn.pack(fill="x", pady=(8, 0))
         btn.bind("<Enter>", lambda e: btn.configure(bg=C["azul_hover"]))
         btn.bind("<Leave>", lambda e: btn.configure(bg=color))
@@ -292,8 +288,7 @@ class SistemaRecepcion:
         ]
 
         for titulo, img_ruta, desc, r, c, cmd, colspan, rowspan in tarjetas:
-            self._tarjeta(grid_frame, titulo, img_ruta, desc,
-                          r, c, cmd, colspan, rowspan)
+            self._tarjeta(grid_frame, titulo, img_ruta, desc, r, c, cmd, colspan, rowspan)
 
     def _tarjeta(self, parent, titulo, img_ruta, desc, r, c, cmd, colspan=1, rowspan=1):
         ruta = os.path.join(BASE_DIR, img_ruta)
@@ -333,11 +328,8 @@ class SistemaRecepcion:
         tk.Label(text_frame, text=desc, font=("Segoe UI", 9), fg="#CBD5E1", bg=bg_overlay, wraplength=240, 
                  justify="left").pack(anchor="w", pady=(4, 10))
 
-        btn = tk.Button(text_frame, text="Abrir →",
-                        bg=C["azul_claro"], fg=C["blanco"],
-                        font=("Segoe UI", 9, "bold"),
-                        relief="flat", bd=0, padx=16, pady=5,
-                        cursor="hand2", command=cmd)
+        btn = tk.Button(text_frame, text="Abrir →", bg=C["azul_claro"], fg=C["blanco"], font=("Segoe UI", 9, "bold"),
+                        relief="flat", bd=0, padx=16, pady=5, cursor="hand2", command=cmd)
         btn.pack(anchor="w")
 
         def card_enter(e):
@@ -372,32 +364,24 @@ class SistemaRecepcion:
         form_card = tk.Frame(left, bg=C["blanco"], padx=40, pady=36)
         form_card.pack(fill="both", expand=True)
 
-        tk.Label(form_card, text="👤  Registrar Paciente",
-                 font=FUENTES["titulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 6))
-        tk.Label(form_card, text="Complete los datos del nuevo paciente.",
-                 font=FUENTES["cuerpo"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
+        tk.Label(form_card, text="👤  Registrar Paciente", font=FUENTES["titulo"], bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 6))
+        tk.Label(form_card, text="Complete los datos del nuevo paciente.", font=FUENTES["cuerpo"],bg=C["blanco"], 
+                 fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
 
         self.e_ci     = self._campo(form_card, "Carnet de Identidad (CI)")
         self.e_nombre = self._campo(form_card, "Nombre Completo")
         self.e_edad   = self._campo(form_card, "Edad")
         self.e_tel    = self._campo(form_card, "Teléfono (opcional)")
 
-        self._boton_primario(form_card, "REGISTRAR PACIENTE →",
-                             self.registrar_paciente)
+        self._boton_primario(form_card, "REGISTRAR PACIENTE →", self.registrar_paciente)
 
         list_card = tk.Frame(right, bg=C["blanco"], padx=30, pady=30)
         list_card.pack(fill="both", expand=True)
 
         header_r = tk.Frame(list_card, bg=C["blanco"])
         header_r.pack(fill="x", pady=(0, 16))
-        tk.Label(header_r, text="Pacientes Registrados",
-                 font=FUENTES["subtitulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(side="left")
-        tk.Label(header_r, text=f"{len(pacientes_db)} total",
-                 font=FUENTES["pequeño"],
-                 bg=C["azul_claro"], fg=C["blanco"],
+        tk.Label(header_r, text="Pacientes Registrados", font=FUENTES["subtitulo"], bg=C["blanco"], fg=C["texto"]).pack(side="left")
+        tk.Label(header_r, text=f"{len(pacientes_db)} total", font=FUENTES["pequeño"], bg=C["azul_claro"], fg=C["blanco"],
                  padx=8, pady=3).pack(side="right")
 
         cols = ("CI", "Nombre", "Edad")
@@ -407,7 +391,8 @@ class SistemaRecepcion:
         for col, w in zip(cols, anchos):
             tree.heading(col, text=col)
             tree.column(col, width=w, anchor="center")
-
+#Jose, no seria mejor eliminar esta barra? xd 
+#No tiene mucha funcion
         vsb = ttk.Scrollbar(list_card, orient="vertical",
                             command=tree.yview)
         tree.configure(yscrollcommand=vsb.set)
@@ -420,23 +405,17 @@ class SistemaRecepcion:
         def eliminar():
             sel = tree.selection()
             if not sel:
-                messagebox.showwarning("Sin selección",
-                    "Seleccione un paciente para eliminar.")
+                messagebox.showwarning("Sin selección", "Seleccione un paciente para eliminar.")
                 return
             ci = tree.item(sel[0])["values"][0]
-            if messagebox.askyesno("Confirmar",
-                    f"¿Eliminar al paciente con CI {ci}?"):
+            if messagebox.askyesno("Confirmar", f"¿Eliminar al paciente con CI {ci}?"):
                 del pacientes_db[str(ci)]
                 self.guardar_pacientes()
                 self._poblar_pacientes(tree)
                 tree.delete(sel[0])
 
-        tk.Button(list_card, text="🗑  Eliminar seleccionado",
-                  bg=C["rojo"], fg=C["blanco"],
-                  font=FUENTES["pequeño"],
-                  relief="flat", bd=0, padx=12, pady=6,
-                  cursor="hand2",
-                  command=eliminar).pack(pady=(8, 0))
+        tk.Button(list_card, text="🗑  Eliminar seleccionado", bg=C["rojo"], fg=C["blanco"], font=FUENTES["pequeño"],
+                  relief="flat", bd=0, padx=12, pady=6, cursor="hand2", command=eliminar).pack(pady=(8, 0))
 
     def _poblar_pacientes(self, tree):
         for row in tree.get_children():
@@ -455,23 +434,19 @@ class SistemaRecepcion:
         tel    = self.e_tel.get().strip()
 
         if not ci or not nombre:
-            messagebox.showerror("Datos incompletos",
-                "El CI y el nombre son obligatorios.")
+            messagebox.showerror("Datos incompletos", "El CI y el nombre son obligatorios.")
             return
 
         if not ci.isdigit():
-            messagebox.showerror("CI inválido",
-                "El Carnet de Identidad solo debe contener números.")
+            messagebox.showerror("CI inválido", "El Carnet de Identidad solo debe contener números.")
             return
 
         if ci in pacientes_db:
-            messagebox.showwarning("Paciente existente",
-                f"Ya existe un paciente con CI {ci}.")
+            messagebox.showwarning("Paciente existente", f"Ya existe un paciente con CI {ci}.")
             return
 
         if edad and not edad.isdigit():
-            messagebox.showerror("Edad inválida",
-                "La edad debe ser un número entero.")
+            messagebox.showerror("Edad inválida", "La edad debe ser un número entero.")
             return
 
         pacientes_db[ci] = {
@@ -485,9 +460,9 @@ class SistemaRecepcion:
             e.delete(0, tk.END)
 
         self._poblar_pacientes(self._tree_pacientes)
-        messagebox.showinfo("✅ Registrado",
-            f"Paciente '{nombre}' registrado correctamente.")
+        messagebox.showinfo("✅ Registrado", f"Paciente '{nombre}' registrado correctamente.")
 
+#Sector de citas 😈
     def vista_citas(self):
         self.limpiar()
         self.sidebar("citas")
@@ -498,53 +473,33 @@ class SistemaRecepcion:
         main.grid_columnconfigure(1, weight=1)
         main.grid_rowconfigure(0, weight=1)
 
-        # ── Formulario ──
         left = tk.Frame(main, bg=C["fondo"], padx=30, pady=30)
         left.grid(row=0, column=0, sticky="nsew")
 
         form = tk.Frame(left, bg=C["blanco"], padx=40, pady=36)
         form.pack(fill="both", expand=True)
 
-        tk.Label(form, text="📅  Reservar Nueva Cita",
-                 font=FUENTES["titulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 4))
-        tk.Label(form, text="Seleccione paciente, especialidad y médico.",
-                 font=FUENTES["cuerpo"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
+        tk.Label(form, text="📅  Reservar Nueva Cita", font=FUENTES["titulo"], bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 4))
+        tk.Label(form, text="Seleccione paciente, especialidad y médico.", font=FUENTES["cuerpo"], bg=C["blanco"], 
+                 fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
 
-        tk.Label(form, text="Paciente",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
+        tk.Label(form, text="Paciente", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
         lista_p = [f"{d['nombre']}  —  CI: {ci}"
                    for ci, d in pacientes_db.items()]
-        self.c_paciente = ttk.Combobox(form, values=lista_p,
-                                       state="readonly",
-                                       font=FUENTES["cuerpo"])
+        self.c_paciente = ttk.Combobox(form, values=lista_p, state="readonly", font=FUENTES["cuerpo"])
         self.c_paciente.pack(fill="x", pady=(4, 16), ipady=6)
 
-        tk.Label(form, text="Especialidad",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
-        self.c_especialidad = ttk.Combobox(
-            form, values=sorted(especialidades.keys()),
-            state="readonly", font=FUENTES["cuerpo"])
+        tk.Label(form, text="Especialidad", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
+        self.c_especialidad = ttk.Combobox(form, values=sorted(especialidades.keys()), state="readonly", font=FUENTES["cuerpo"])
         self.c_especialidad.pack(fill="x", pady=(4, 16), ipady=6)
-        self.c_especialidad.bind("<<ComboboxSelected>>",
-                                 self._actualizar_doctores)
+        self.c_especialidad.bind("<<ComboboxSelected>>", self._actualizar_doctores)
 
-        tk.Label(form, text="Doctor / Horario",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
-        self.c_doctor = ttk.Combobox(form, state="readonly",
-                                     font=FUENTES["cuerpo"])
+        tk.Label(form, text="Doctor / Horario", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
+        self.c_doctor = ttk.Combobox(form, state="readonly", font=FUENTES["cuerpo"])
         self.c_doctor.pack(fill="x", pady=(4, 16), ipady=6)
 
-        tk.Label(form, text="Motivo de consulta (opcional)",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
-        self.e_motivo = tk.Text(form, font=FUENTES["cuerpo"],
-                                bg=C["fondo"], fg=C["texto"],
-                                relief="flat", height=4, bd=0,
+        tk.Label(form, text="Motivo de consulta (opcional)", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
+        self.e_motivo = tk.Text(form, font=FUENTES["cuerpo"], bg=C["fondo"], fg=C["texto"], relief="flat", height=4, bd=0,
                                 insertbackground=C["azul_claro"])
         self.e_motivo.pack(fill="x", pady=(4, 20))
 
@@ -558,12 +513,8 @@ class SistemaRecepcion:
 
         header_r = tk.Frame(panel, bg=C["blanco"])
         header_r.pack(fill="x", pady=(0, 16))
-        tk.Label(header_r, text="Citas del Día",
-                 font=FUENTES["subtitulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(side="left")
-        tk.Label(header_r, text=f"{len(citas)} total",
-                 font=FUENTES["pequeño"],
-                 bg=C["azul_claro"], fg=C["blanco"],
+        tk.Label(header_r, text="Citas del Día", font=FUENTES["subtitulo"], bg=C["blanco"], fg=C["texto"]).pack(side="left")
+        tk.Label(header_r, text=f"{len(citas)} total", font=FUENTES["pequeño"], bg=C["azul_claro"], fg=C["blanco"],
                  padx=8, pady=3).pack(side="right")
 
         cols = ("Paciente", "Especialidad", "Doctor", "Estado")
@@ -608,8 +559,7 @@ class SistemaRecepcion:
         motivo      = self.e_motivo.get("1.0", tk.END).strip()
 
         if not paciente or not especialidad or not doctor:
-            messagebox.showerror("Campos incompletos",
-                "Por favor seleccione paciente, especialidad y doctor.")
+            messagebox.showerror("Campos incompletos", "Por favor seleccione paciente, especialidad y doctor.")
             return
 
         ci = paciente.split("CI: ")[1].strip()
@@ -628,19 +578,16 @@ class SistemaRecepcion:
         self.guardar_citas()
 
         estado = "⏳ Pendiente"
-        self._tree_citas.insert("", 0, values=(
-            nombre, especialidad,
-            doctor.split("  —  ")[0], estado
-        ), tags=("pendiente",))
-
+        self._tree_citas.insert("", 0, values=(nombre, especialidad, doctor.split("  —  ")[0], estado), tags=("pendiente",))
         self.c_paciente.set("")
         self.c_especialidad.set("")
         self.c_doctor.set("")
         self.e_motivo.delete("1.0", tk.END)
 
-        messagebox.showinfo("✅ Cita registrada",
-            f"Cita para '{nombre}' reservada correctamente.")
+        messagebox.showinfo("✅ Cita registrada", f"Cita para '{nombre}' reservada correctamente.")
 
+#Sector de enfermos xd,
+# okno, de enfermeria
     def vista_enfermeria(self):
         self.limpiar()
         self.sidebar("enfermeria")
@@ -657,28 +604,20 @@ class SistemaRecepcion:
         form = tk.Frame(left, bg=C["blanco"], padx=40, pady=36)
         form.pack(fill="both", expand=True)
 
-        tk.Label(form, text="🩺  Triaje y Signos Vitales",
-                 font=FUENTES["titulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 4))
-        tk.Label(form, text="Registre los signos vitales del paciente.",
-                 font=FUENTES["cuerpo"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
+        tk.Label(form, text="🩺  Triaje y Signos Vitales", font=FUENTES["titulo"], bg=C["blanco"], 
+                 fg=C["texto"]).pack(anchor="w", pady=(0, 4))
+        tk.Label(form, text="Registre los signos vitales del paciente.", font=FUENTES["cuerpo"], bg=C["blanco"], 
+                 fg=C["gris_texto"]).pack(anchor="w", pady=(0, 24))
 
-        tk.Label(form, text="Paciente pendiente",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
+        tk.Label(form, text="Paciente pendiente", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w")
         pendientes = [f"{c['paciente']}  —  CI: {c['ci']}"
                       for c in citas if c.get("triaje") == "Pendiente"]
-        self.c_triaje = ttk.Combobox(form, values=pendientes,
-                                     state="readonly",
-                                     font=FUENTES["cuerpo"])
+        self.c_triaje = ttk.Combobox(form, values=pendientes, state="readonly", font=FUENTES["cuerpo"])
         self.c_triaje.pack(fill="x", pady=(4, 20), ipady=6)
 
         disp_lbl = tk.Label(form,
             text=f"{'⚠️  No hay pacientes pendientes.' if not pendientes else f'✅  {len(pendientes)} paciente(s) en espera.'}",
-            font=FUENTES["pequeño"],
-            bg=C["amarillo"] if not pendientes else C["verde"],
-            fg=C["blanco"], padx=10, pady=5)
+            font=FUENTES["pequeño"], bg=C["amarillo"] if not pendientes else C["verde"], fg=C["blanco"], padx=10, pady=5)
         disp_lbl.pack(fill="x", pady=(0, 16))
 
         sv = tk.Frame(form, bg=C["blanco"])
@@ -686,23 +625,14 @@ class SistemaRecepcion:
         sv.columnconfigure((0, 1), weight=1)
 
         def campo_sv(parent, label, row, col, unidad=""):
-            tk.Label(parent, text=label,
-                     font=FUENTES["label"],
-                     bg=C["blanco"], fg=C["gris_texto"]).grid(
-                         row=row*2, column=col, sticky="w", padx=(0, 10))
+            tk.Label(parent, text=label, font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).grid(row=row*2, column=col, 
+                                                                                                         sticky="w", padx=(0, 10))
             frame = tk.Frame(parent, bg=C["fondo"])
-            frame.grid(row=row*2+1, column=col, sticky="ew",
-                       pady=(4, 16), padx=(0, 10))
-            e = tk.Entry(frame, font=FUENTES["cuerpo"],
-                         bg=C["fondo"], fg=C["texto"],
-                         relief="flat", bd=0,
-                         insertbackground=C["azul_claro"])
+            frame.grid(row=row*2+1, column=col, sticky="ew", pady=(4, 16), padx=(0, 10))
+            e = tk.Entry(frame, font=FUENTES["cuerpo"], bg=C["fondo"], fg=C["texto"], relief="flat", bd=0, insertbackground=C["azul_claro"])
             e.pack(side="left", fill="x", expand=True, ipady=8, padx=(8, 0))
             if unidad:
-                tk.Label(frame, text=unidad,
-                         font=FUENTES["pequeño"],
-                         bg=C["fondo"], fg=C["gris_texto"],
-                         padx=8).pack(side="right")
+                tk.Label(frame, text=unidad, font=FUENTES["pequeño"], bg=C["fondo"], fg=C["gris_texto"], padx=8).pack(side="right")
             tk.Frame(form, bg=C["gris_claro"], height=1).pack(
                 fill="x") if False else None
             return e
@@ -714,12 +644,8 @@ class SistemaRecepcion:
         self.e_fc    = campo_sv(sv, "Frec. Cardíaca",     2, 0, "lpm")
         self.e_sat   = campo_sv(sv, "Saturación O₂",     2, 1, "%")
 
-        tk.Label(form, text="Observaciones",
-                 font=FUENTES["label"],
-                 bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w", pady=(8, 0))
-        self.e_obs = tk.Text(form, font=FUENTES["cuerpo"],
-                             bg=C["fondo"], fg=C["texto"],
-                             relief="flat", height=3, bd=0)
+        tk.Label(form, text="Observaciones", font=FUENTES["label"], bg=C["blanco"], fg=C["gris_texto"]).pack(anchor="w", pady=(8, 0))
+        self.e_obs = tk.Text(form, font=FUENTES["cuerpo"], bg=C["fondo"], fg=C["texto"], relief="flat", height=3, bd=0)
         self.e_obs.pack(fill="x", pady=(4, 20))
 
         self._boton_primario(form, "GUARDAR TRIAJE →", self.guardar_triaje)
@@ -730,18 +656,14 @@ class SistemaRecepcion:
         panel = tk.Frame(right, bg=C["blanco"], padx=30, pady=30)
         panel.pack(fill="both", expand=True)
 
-        tk.Label(panel, text="Historial de Triaje",
-                 font=FUENTES["subtitulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 16))
-
+        tk.Label(panel, text="Historial de Triaje", font=FUENTES["subtitulo"], bg=C["blanco"], fg=C["texto"]).pack(anchor="w", pady=(0, 16))
         cols = ("Paciente", "Signos", "Estado")
         tree = ttk.Treeview(panel, columns=cols, show="headings", height=16)
         for col, w in zip(cols, [150, 260, 100]):
             tree.heading(col, text=col)
             tree.column(col, width=w)
-
         tree.tag_configure("pendiente", foreground=C["amarillo"])
-        tree.tag_configure("ok",        foreground=C["verde"])
+        tree.tag_configure("ok", foreground=C["verde"])
 
         vsb = ttk.Scrollbar(panel, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=vsb.set)
@@ -768,12 +690,10 @@ class SistemaRecepcion:
         peso = self.e_peso.get().strip()
 
         if not pa or not temp or not peso:
-            messagebox.showerror("Datos incompletos",
-                "Presión, temperatura y peso son obligatorios.")
+            messagebox.showerror("Datos incompletos", "Presión, temperatura y peso son obligatorios.")
             return
 
         ci = paciente.split("CI: ")[1].strip()
-
         partes = []
         if pa:   partes.append(f"PA: {pa} mmHg")
         if temp: partes.append(f"T°: {temp}°C")
@@ -786,7 +706,6 @@ class SistemaRecepcion:
         if sat:   partes.append(f"SpO₂: {sat}%")
         obs = self.e_obs.get("1.0", tk.END).strip()
         if obs:   partes.append(f"Obs: {obs}")
-
         resumen = "  |  ".join(partes)
 
         for c in citas:
@@ -801,20 +720,17 @@ class SistemaRecepcion:
         self.c_triaje["values"] = pendientes
         self.c_triaje.set("")
 
-        for e in (self.e_pa, self.e_temp, self.e_peso,
-                  self.e_talla, self.e_fc, self.e_sat):
+        for e in (self.e_pa, self.e_temp, self.e_peso, self.e_talla, self.e_fc, self.e_sat):
             e.delete(0, tk.END)
         self.e_obs.delete("1.0", tk.END)
 
         for item in self._tree_triaje.get_children():
             vals = self._tree_triaje.item(item)["values"]
             if vals and str(vals[0]) == str(pacientes_db.get(ci, {}).get("nombre", "")):
-                self._tree_triaje.item(item, values=(vals[0], resumen, "✓ Triaje OK"),
-                                       tags=("ok",))
+                self._tree_triaje.item(item, values=(vals[0], resumen, "✓ Triaje OK"), tags=("ok",))
                 break
 
-        messagebox.showinfo("✅ Triaje guardado",
-            "Los signos vitales fueron registrados correctamente.")
+        messagebox.showinfo("✅ Triaje guardado", "Los signos vitales fueron registrados correctamente.")
 
     def vista_agenda(self):
         self.limpiar()
@@ -828,21 +744,17 @@ class SistemaRecepcion:
         header = tk.Frame(main, bg=C["blanco"], pady=20, padx=40)
         header.grid(row=0, column=0, sticky="ew")
 
-        tk.Label(header, text="📋  Agenda General de Citas",
-                 font=FUENTES["titulo"],
-                 bg=C["blanco"], fg=C["texto"]).pack(side="left")
+        tk.Label(header, text="📋  Agenda General de Citas", font=FUENTES["titulo"], bg=C["blanco"], fg=C["texto"]).pack(side="left")
 
         total_c   = len(citas)
         pendientes = len([c for c in citas if c.get("triaje") == "Pendiente"])
 
         badge_frame = tk.Frame(header, bg=C["blanco"])
         badge_frame.pack(side="right")
-        tk.Label(badge_frame, text=f"  {total_c} total  ",
-                 bg=C["azul_claro"], fg=C["blanco"],
-                 font=("Segoe UI", 10, "bold"), padx=6, pady=4).pack(side="left", padx=4)
-        tk.Label(badge_frame, text=f"  {pendientes} pendientes  ",
-                 bg=C["amarillo"], fg=C["blanco"],
-                 font=("Segoe UI", 10, "bold"), padx=6, pady=4).pack(side="left", padx=4)
+        tk.Label(badge_frame, text=f"  {total_c} total  ", bg=C["azul_claro"], fg=C["blanco"], font=("Segoe UI", 10, "bold"), 
+                 padx=6, pady=4).pack(side="left", padx=4)
+        tk.Label(badge_frame, text=f"  {pendientes} pendientes  ", bg=C["amarillo"], fg=C["blanco"], font=("Segoe UI", 10, "bold"), 
+                 padx=6, pady=4).pack(side="left", padx=4)
 
         search_bar = tk.Frame(main, bg=C["fondo"], pady=10, padx=30)
         search_bar.grid(row=1, column=0, sticky="ew")
@@ -851,12 +763,8 @@ class SistemaRecepcion:
         tk.Label(search_bar, text="🔍",
                  font=("Segoe UI Emoji", 13),
                  bg=C["fondo"], fg=C["gris_texto"]).pack(side="left")
-        self.e_buscar = tk.Entry(search_bar,
-                                 font=FUENTES["cuerpo"],
-                                 bg=C["blanco"], fg=C["texto"],
-                                 relief="flat", bd=0)
-        self.e_buscar.pack(side="left", fill="x", expand=True,
-                           ipady=8, padx=(8, 0))
+        self.e_buscar = tk.Entry(search_bar, font=FUENTES["cuerpo"], bg=C["blanco"], fg=C["texto"], relief="flat", bd=0)
+        self.e_buscar.pack(side="left", fill="x", expand=True, ipady=8, padx=(8, 0))
         self.e_buscar.insert(0, "Buscar por nombre, CI o especialidad...")
         self.e_buscar.configure(fg=C["gris_texto"])
 
@@ -867,27 +775,23 @@ class SistemaRecepcion:
         self.e_buscar.bind("<FocusIn>", clear_placeholder)
         self.e_buscar.bind("<KeyRelease>", lambda e: self._filtrar_agenda())
 
-        table_frame = tk.Frame(main, bg=C["fondo"], padx=30, pady=(0, 20))
+        table_frame = tk.Frame(main, bg=C["fondo"], padx=30)
         table_frame.grid(row=2, column=0, sticky="nsew")
         main.grid_rowconfigure(2, weight=1)
 
         cols = ("Paciente", "CI", "Especialidad", "Doctor", "Horario", "Estado", "Fecha")
-        self._tabla_agenda = ttk.Treeview(table_frame, columns=cols,
-                                          show="headings")
+        self._tabla_agenda = ttk.Treeview(table_frame, columns=cols, show="headings")
         anchos = [180, 100, 140, 180, 80, 120, 120]
         for col, w in zip(cols, anchos):
             self._tabla_agenda.heading(col, text=col)
             self._tabla_agenda.column(col, width=w, anchor="center")
 
-        self._tabla_agenda.tag_configure("pendiente",
-            background="#FFFBEB", foreground="#92400E")
-        self._tabla_agenda.tag_configure("atendido",
-            background="#F0FDF4", foreground="#166534")
-        self._tabla_agenda.tag_configure("impar",  background="#F8FAFC")
-        self._tabla_agenda.tag_configure("par",    background=C["blanco"])
+        self._tabla_agenda.tag_configure("pendiente", background="#FFFBEB", foreground="#92400E")
+        self._tabla_agenda.tag_configure("atendido", background="#F0FDF4", foreground="#166534")
+        self._tabla_agenda.tag_configure("impar", background="#F8FAFC")
+        self._tabla_agenda.tag_configure("par", background=C["blanco"])
 
-        vsb = ttk.Scrollbar(table_frame, orient="vertical",
-                             command=self._tabla_agenda.yview)
+        vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self._tabla_agenda.yview)
         self._tabla_agenda.configure(yscrollcommand=vsb.set)
         self._tabla_agenda.pack(side="left", fill="both", expand=True)
         vsb.pack(side="right", fill="y")
@@ -898,19 +802,11 @@ class SistemaRecepcion:
         btn_frame.grid(row=3, column=0, sticky="ew")
         main.grid_rowconfigure(3, weight=0)
 
-        tk.Button(btn_frame, text="⬇  Exportar a CSV",
-                  bg=C["azul_medio"], fg=C["blanco"],
-                  font=FUENTES["pequeño"],
-                  relief="flat", bd=0, padx=16, pady=8,
-                  cursor="hand2",
-                  command=self._exportar_csv).pack(side="left")
+        tk.Button(btn_frame, text="⬇  Exportar a CSV", bg=C["azul_medio"], fg=C["blanco"], font=FUENTES["pequeño"], relief="flat", 
+                  bd=0, padx=16, pady=8, cursor="hand2", command=self._exportar_csv).pack(side="left")
 
-        tk.Button(btn_frame, text="🗑  Cancelar cita seleccionada",
-                  bg=C["rojo"], fg=C["blanco"],
-                  font=FUENTES["pequeño"],
-                  relief="flat", bd=0, padx=16, pady=8,
-                  cursor="hand2",
-                  command=self._cancelar_cita).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="🗑️  Cancelar cita", bg=C["rojo"], fg=C["blanco"], font=FUENTES["pequeño"],
+                  relief="flat", bd=0, padx=16, pady=8, cursor="hand2", command=self._cancelar_cita).pack(side="left", padx=10)
 
     def _poblar_agenda(self, lista):
         for row in self._tabla_agenda.get_children():
@@ -952,21 +848,18 @@ class SistemaRecepcion:
                     "doctor", "triaje", "fecha"])
                 writer.writeheader()
                 writer.writerows(citas)
-            messagebox.showinfo("✅ Exportado",
-                f"Agenda exportada a:\n{ruta}")
+            messagebox.showinfo("✅ Exportado", f"Agenda exportada a:\n{ruta}")
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
     def _cancelar_cita(self):
         sel = self._tabla_agenda.selection()
         if not sel:
-            messagebox.showwarning("Sin selección",
-                "Seleccione una cita para cancelar.")
+            messagebox.showwarning("Sin selección", "Seleccione una cita para cancelar.")
             return
         idx = int(sel[0])
         c = citas[idx]
-        if messagebox.askyesno("Confirmar cancelación",
-                f"¿Cancelar la cita de '{c['paciente']}'?"):
+        if messagebox.askyesno("Confirmar cancelación", f"¿Cancelar la cita de '{c['paciente']}'?"):
             citas.pop(idx)
             self.guardar_citas()
             self._poblar_agenda(citas)

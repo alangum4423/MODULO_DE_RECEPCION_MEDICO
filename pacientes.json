@@ -10,5 +10,10 @@
     "45679012": {
         "nombre": "Dwight Kurt Schrutte",
         "edad": "45"
+    },
+    "24407890": {
+        "nombre": "Michael Scott",
+        "edad": "52",
+        "telefono": "78903356"
     }
 }
